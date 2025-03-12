@@ -222,28 +222,32 @@ fun DateCalculatorScreen() {
                     value = resultDays,
                     onValueChange = { resultDays = it },
                     label = { Text("Dni") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    readOnly = true
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = resultHours,
                     onValueChange = { resultHours = it },
                     label = { Text("Godziny") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    readOnly = true
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = resultMinutes,
                     onValueChange = { resultMinutes = it },
                     label = { Text("Minuty") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    readOnly = true
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = resultSeconds,
                     onValueChange = { resultSeconds = it },
                     label = { Text("Sekundy") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    readOnly = true
                 )
             }
         }

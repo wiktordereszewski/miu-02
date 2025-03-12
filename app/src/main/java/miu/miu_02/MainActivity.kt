@@ -5,31 +5,26 @@ import miu.miu_02.ui.theme.AppTheme
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.KeyboardType
-import kotlin.div
-import kotlin.rem
-import kotlin.text.compareTo
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
@@ -41,13 +36,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import kotlin.div
-import kotlin.rem
-import kotlin.text.compareTo
 import kotlin.text.format
-import kotlin.text.get
-import kotlin.text.set
-import kotlin.toString
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,8 +75,6 @@ fun DateCalculatorScreen() {
     var showFirstTimePicker by remember { mutableStateOf(false) }
     var showSecondTimePicker by remember { mutableStateOf(false) }
 
-
-    val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
@@ -197,7 +184,7 @@ fun DateCalculatorScreen() {
             // Przycisk oblicz
             Button(
                 onClick = {
-                    if (firstDate.compareTo(secondDate) > 0) {
+                    if (firstDate > secondDate) {
                         coroutineScope.launch {
                             snackbarHostState.showSnackbar(
                                 message = "Data początkowa nie może być późniejsza niż końcowa",
@@ -352,9 +339,9 @@ fun Material3TimePickerWithSeconds(
     initialMinute: Int = 0,
     initialSecond: Int = 0
 ) {
-    var selectedHour by remember { mutableStateOf(initialHour) }
-    var selectedMinute by remember { mutableStateOf(initialMinute) }
-    var selectedSecond by remember { mutableStateOf(initialSecond) }
+    var selectedHour by remember { mutableIntStateOf(initialHour) }
+    var selectedMinute by remember { mutableIntStateOf(initialMinute) }
+    var selectedSecond by remember { mutableIntStateOf(initialSecond) }
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -384,7 +371,7 @@ fun Material3TimePickerWithSeconds(
                 )
 
                 // Time display
-                val timeText = String.format(
+                val timeText = String.format(Locale.US,
                     "%02d:%02d:%02d",
                     selectedHour,
                     selectedMinute,
@@ -399,7 +386,7 @@ fun Material3TimePickerWithSeconds(
                 )
 
                 // Divider line
-                Divider(
+                HorizontalDivider(
                     modifier = Modifier.fillMaxWidth(),
                     color = MaterialTheme.colorScheme.outlineVariant
                 )
@@ -475,7 +462,7 @@ fun CyclicTimePickerColumn(
         )
 
         // Thin line separator
-        Divider(
+        HorizontalDivider(
             modifier = Modifier
                 .width(40.dp)
                 .padding(vertical = 4.dp),
@@ -504,7 +491,7 @@ fun CyclicTimePickerColumn(
             )
 
             val listState = rememberLazyListState()
-            var currentValue by remember { mutableStateOf(initialValue) }
+            var currentValue by remember { mutableIntStateOf(initialValue) }
 
             val itemCount = 10000
             val middleIndex = itemCount / 2
@@ -557,7 +544,7 @@ fun CyclicTimePickerColumn(
                             .fillMaxWidth()
                     ) {
                         Text(
-                            text = String.format("%02d", value),
+                            text = String.format(Locale.US, "%02d", value),
                             style = MaterialTheme.typography.headlineSmall,
                             color = if (value == currentValue)
                                 MaterialTheme.colorScheme.primary
@@ -570,31 +557,3 @@ fun CyclicTimePickerColumn(
         }
     }
 }
-
-
-@Composable
-fun PreviewMaterial3TimePicker() {
-    var selectedTime by remember { mutableStateOf("Nie wybrano czasu") }
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text(selectedTime)
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {
-            // Wyświetl TimePicker po kliknięciu przycisku
-            showTimePicker = true
-        }) {
-            Text("Wybierz czas")
-        }
-
-        if (showTimePicker) {
-            Material3TimePickerWithSeconds(
-                onTimeSelected = { hour, minute, second ->
-                    selectedTime = String.format("%02d:%02d:%02d", hour, minute, second)
-                    showTimePicker = false // Zamknij TimePicker po wybraniu czasu
-                },
-                onDismiss = { showTimePicker = false } // Zamknij TimePicker po anulowaniu
-            )
-        }
-    }
-}
-
-private var showTimePicker by mutableStateOf(false) // Stan do kontrolowania wyświetlania TimePickera

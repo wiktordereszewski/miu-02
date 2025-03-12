@@ -354,6 +354,7 @@ fun Material3TimePickerWithSeconds(
         Surface(
             shape = MaterialTheme.shapes.extraLarge,
             tonalElevation = 6.dp,
+            color = MaterialTheme.colorScheme.surfaceContainerHigh,
             modifier = Modifier
                 .width(328.dp)
                 .wrapContentHeight()
